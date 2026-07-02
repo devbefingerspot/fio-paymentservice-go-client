@@ -14,7 +14,7 @@ import (
 	"fmt"
 	"sync"
 
-	paymentv1 "github.com/devbefingerspot/fio-payment-go-client/internal/pb/payment/v1"
+	paymentv1 "github.com/devbefingerspot/fio-paymentservice-go-client/internal/pb/payment/v1"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"

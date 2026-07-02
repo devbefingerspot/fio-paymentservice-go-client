@@ -1,4 +1,4 @@
-module github.com/devbefingerspot/fio-payment-go-client
+module github.com/devbefingerspot/fio-paymentservice-go-client
 
 go 1.25.0
 

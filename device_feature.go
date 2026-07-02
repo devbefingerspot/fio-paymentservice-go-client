@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	paymentv1 "github.com/devbefingerspot/fio-payment-go-client/internal/pb/payment/v1"
+	paymentv1 "github.com/devbefingerspot/fio-paymentservice-go-client/internal/pb/payment/v1"
 )
 
 // DeviceQuotaStatus mirrors the DeviceQuotaStatus proto enum.

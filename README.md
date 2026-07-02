@@ -1,11 +1,11 @@
-# fio-payment-go-client
+# fio-paymentservice-go-client
 
 Go client library for the Fingerspot payment backend gRPC API.
 
 ## Usage
 
 ```go
-import paymentclient "github.com/devbefingerspot/fio-payment-go-client"
+import paymentclient "github.com/devbefingerspot/fio-paymentservice-go-client"
 
 client := paymentclient.New("payment-grpc:50051", os.Getenv("PAYMENT_GRPC_API_KEY"))
 defer client.Close()
