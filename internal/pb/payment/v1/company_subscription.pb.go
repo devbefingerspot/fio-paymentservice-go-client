@@ -146,9 +146,13 @@ type CompanySubscription struct {
 	// addons are additional (non-plan) subscription items.
 	Addons []*SubscriptionAddon `protobuf:"bytes,11,rep,name=addons,proto3" json:"addons,omitempty"`
 	// plan_batches lists every individual plan subscription_item (per_unit add-quota produces multiple).
-	PlanBatches   []*SubscriptionPlanBatch `protobuf:"bytes,12,rep,name=plan_batches,json=planBatches,proto3" json:"plan_batches,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	PlanBatches []*SubscriptionPlanBatch `protobuf:"bytes,12,rep,name=plan_batches,json=planBatches,proto3" json:"plan_batches,omitempty"`
+	// feature_details is the aggregated view of all features across all sources
+	// (plan + addons). Bundle inner features are fully expanded and counts are
+	// summed across all subscription items. Empty parent_item_key means direct.
+	FeatureDetails []*SubscriptionFeatureDetail `protobuf:"bytes,13,rep,name=feature_details,json=featureDetails,proto3" json:"feature_details,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *CompanySubscription) Reset() {
@@ -265,6 +269,13 @@ func (x *CompanySubscription) GetPlanBatches() []*SubscriptionPlanBatch {
 	return nil
 }
 
+func (x *CompanySubscription) GetFeatureDetails() []*SubscriptionFeatureDetail {
+	if x != nil {
+		return x.FeatureDetails
+	}
+	return nil
+}
+
 type SubscriptionFeatureDetail struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id is the subscription_feature primary key.
@@ -284,7 +295,10 @@ type SubscriptionFeatureDetail struct {
 	// assigned_count is the number of currently assigned units (only meaningful for seat features).
 	AssignedCount int32 `protobuf:"varint,8,opt,name=assigned_count,json=assignedCount,proto3" json:"assigned_count,omitempty"`
 	// source indicates whether this feature came from a plan, addon, or voucher reward.
-	Source        string `protobuf:"bytes,9,opt,name=source,proto3" json:"source,omitempty"`
+	Source string `protobuf:"bytes,9,opt,name=source,proto3" json:"source,omitempty"`
+	// parent_item_key is the bundle item key when this feature originates from a
+	// bundle (e.g. "mobile-pro"). Empty for direct plan/addon features.
+	ParentItemKey string `protobuf:"bytes,10,opt,name=parent_item_key,json=parentItemKey,proto3" json:"parent_item_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -378,6 +392,13 @@ func (x *SubscriptionFeatureDetail) GetAssignedCount() int32 {
 func (x *SubscriptionFeatureDetail) GetSource() string {
 	if x != nil {
 		return x.Source
+	}
+	return ""
+}
+
+func (x *SubscriptionFeatureDetail) GetParentItemKey() string {
+	if x != nil {
+		return x.ParentItemKey
 	}
 	return ""
 }
@@ -582,7 +603,7 @@ const file_payment_v1_company_subscription_proto_rawDesc = "" +
 	"company_id\x18\x01 \x01(\tR\tcompanyId\x12!\n" +
 	"\fproduct_code\x18\x02 \x01(\tR\vproductCode\"e\n" +
 	"\x1eGetCompanySubscriptionResponse\x12C\n" +
-	"\fsubscription\x18\x01 \x01(\v2\x1f.payment.v1.CompanySubscriptionR\fsubscription\"\xa5\x04\n" +
+	"\fsubscription\x18\x01 \x01(\v2\x1f.payment.v1.CompanySubscriptionR\fsubscription\"\xf5\x04\n" +
 	"\x13CompanySubscription\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
 	"\aitem_id\x18\x02 \x01(\tR\x06itemId\x12\x19\n" +
@@ -597,7 +618,8 @@ const file_payment_v1_company_subscription_proto_rawDesc = "" +
 	"\bfeatures\x18\n" +
 	" \x03(\v2%.payment.v1.SubscriptionFeatureDetailR\bfeatures\x125\n" +
 	"\x06addons\x18\v \x03(\v2\x1d.payment.v1.SubscriptionAddonR\x06addons\x12D\n" +
-	"\fplan_batches\x18\f \x03(\v2!.payment.v1.SubscriptionPlanBatchR\vplanBatches\"\xf5\x02\n" +
+	"\fplan_batches\x18\f \x03(\v2!.payment.v1.SubscriptionPlanBatchR\vplanBatches\x12N\n" +
+	"\x0ffeature_details\x18\r \x03(\v2%.payment.v1.SubscriptionFeatureDetailR\x0efeatureDetails\"\x9d\x03\n" +
 	"\x19SubscriptionFeatureDetail\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x19\n" +
 	"\bitem_key\x18\x02 \x01(\tR\aitemKey\x12\x1b\n" +
@@ -608,7 +630,9 @@ const file_payment_v1_company_subscription_proto_rawDesc = "" +
 	"quota_mode\x18\x06 \x01(\x0e2\x15.payment.v1.QuotaModeR\tquotaMode\x12\x19\n" +
 	"\x05limit\x18\a \x01(\x05H\x00R\x05limit\x88\x01\x01\x12%\n" +
 	"\x0eassigned_count\x18\b \x01(\x05R\rassignedCount\x12\x16\n" +
-	"\x06source\x18\t \x01(\tR\x06sourceB\b\n" +
+	"\x06source\x18\t \x01(\tR\x06source\x12&\n" +
+	"\x0fparent_item_key\x18\n" +
+	" \x01(\tR\rparentItemKeyB\b\n" +
 	"\x06_limit\"\xc3\x02\n" +
 	"\x11SubscriptionAddon\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
@@ -667,22 +691,23 @@ var file_payment_v1_company_subscription_proto_depIdxs = []int32{
 	3,  // 4: payment.v1.CompanySubscription.features:type_name -> payment.v1.SubscriptionFeatureDetail
 	4,  // 5: payment.v1.CompanySubscription.addons:type_name -> payment.v1.SubscriptionAddon
 	5,  // 6: payment.v1.CompanySubscription.plan_batches:type_name -> payment.v1.SubscriptionPlanBatch
-	8,  // 7: payment.v1.SubscriptionFeatureDetail.feature_type:type_name -> payment.v1.FeatureType
-	9,  // 8: payment.v1.SubscriptionFeatureDetail.pricing_unit:type_name -> payment.v1.PricingUnit
-	10, // 9: payment.v1.SubscriptionFeatureDetail.quota_mode:type_name -> payment.v1.QuotaMode
-	7,  // 10: payment.v1.SubscriptionAddon.period_start:type_name -> google.protobuf.Timestamp
-	7,  // 11: payment.v1.SubscriptionAddon.period_end:type_name -> google.protobuf.Timestamp
-	3,  // 12: payment.v1.SubscriptionAddon.features:type_name -> payment.v1.SubscriptionFeatureDetail
-	7,  // 13: payment.v1.SubscriptionPlanBatch.period_start:type_name -> google.protobuf.Timestamp
-	7,  // 14: payment.v1.SubscriptionPlanBatch.period_end:type_name -> google.protobuf.Timestamp
-	6,  // 15: payment.v1.SubscriptionPlanBatch.status:type_name -> payment.v1.SubscriptionStatus
-	0,  // 16: payment.v1.CompanySubscriptionService.GetCompanySubscription:input_type -> payment.v1.GetCompanySubscriptionRequest
-	1,  // 17: payment.v1.CompanySubscriptionService.GetCompanySubscription:output_type -> payment.v1.GetCompanySubscriptionResponse
-	17, // [17:18] is the sub-list for method output_type
-	16, // [16:17] is the sub-list for method input_type
-	16, // [16:16] is the sub-list for extension type_name
-	16, // [16:16] is the sub-list for extension extendee
-	0,  // [0:16] is the sub-list for field type_name
+	3,  // 7: payment.v1.CompanySubscription.feature_details:type_name -> payment.v1.SubscriptionFeatureDetail
+	8,  // 8: payment.v1.SubscriptionFeatureDetail.feature_type:type_name -> payment.v1.FeatureType
+	9,  // 9: payment.v1.SubscriptionFeatureDetail.pricing_unit:type_name -> payment.v1.PricingUnit
+	10, // 10: payment.v1.SubscriptionFeatureDetail.quota_mode:type_name -> payment.v1.QuotaMode
+	7,  // 11: payment.v1.SubscriptionAddon.period_start:type_name -> google.protobuf.Timestamp
+	7,  // 12: payment.v1.SubscriptionAddon.period_end:type_name -> google.protobuf.Timestamp
+	3,  // 13: payment.v1.SubscriptionAddon.features:type_name -> payment.v1.SubscriptionFeatureDetail
+	7,  // 14: payment.v1.SubscriptionPlanBatch.period_start:type_name -> google.protobuf.Timestamp
+	7,  // 15: payment.v1.SubscriptionPlanBatch.period_end:type_name -> google.protobuf.Timestamp
+	6,  // 16: payment.v1.SubscriptionPlanBatch.status:type_name -> payment.v1.SubscriptionStatus
+	0,  // 17: payment.v1.CompanySubscriptionService.GetCompanySubscription:input_type -> payment.v1.GetCompanySubscriptionRequest
+	1,  // 18: payment.v1.CompanySubscriptionService.GetCompanySubscription:output_type -> payment.v1.GetCompanySubscriptionResponse
+	18, // [18:19] is the sub-list for method output_type
+	17, // [17:18] is the sub-list for method input_type
+	17, // [17:17] is the sub-list for extension type_name
+	17, // [17:17] is the sub-list for extension extendee
+	0,  // [0:17] is the sub-list for field type_name
 }
 
 func init() { file_payment_v1_company_subscription_proto_init() }
