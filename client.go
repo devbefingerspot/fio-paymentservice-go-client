@@ -35,6 +35,7 @@ type Client struct {
 	companySubscriptionClient paymentv1.CompanySubscriptionServiceClient
 	employeeFeatureClient     paymentv1.EmployeeFeatureServiceClient
 	deviceFeatureClient       paymentv1.DeviceFeatureServiceClient
+	deviceRegistryClient      paymentv1.DeviceRegistryServiceClient
 }
 
 // New creates a new payment gRPC client.
@@ -66,6 +67,7 @@ func (c *Client) WithInsecure() *Client {
 		c.companySubscriptionClient = paymentv1.NewCompanySubscriptionServiceClient(c.conn)
 		c.employeeFeatureClient = paymentv1.NewEmployeeFeatureServiceClient(c.conn)
 		c.deviceFeatureClient = paymentv1.NewDeviceFeatureServiceClient(c.conn)
+		c.deviceRegistryClient = paymentv1.NewDeviceRegistryServiceClient(c.conn)
 	})
 	return c
 }
@@ -93,6 +95,7 @@ func (c *Client) dialOnce() (*grpc.ClientConn, error) {
 		c.companySubscriptionClient = paymentv1.NewCompanySubscriptionServiceClient(c.conn)
 		c.employeeFeatureClient = paymentv1.NewEmployeeFeatureServiceClient(c.conn)
 		c.deviceFeatureClient = paymentv1.NewDeviceFeatureServiceClient(c.conn)
+		c.deviceRegistryClient = paymentv1.NewDeviceRegistryServiceClient(c.conn)
 	})
 	return c.conn, c.connErr
 }
