@@ -232,7 +232,7 @@ func (x *GetDeviceQuotaResponse) GetAssignedDevices() []*DeviceAssignment {
 // DeviceAssignment represents a single device that holds an active seat.
 type DeviceAssignment struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// cloud_id is the cloud identifier of the assigned device.
+	// cloud_id is the identifier of the assigned device.
 	CloudId string `protobuf:"bytes,1,opt,name=cloud_id,json=cloudId,proto3" json:"cloud_id,omitempty"`
 	// assigned_at is when the seat was assigned to this device.
 	AssignedAt *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=assigned_at,json=assignedAt,proto3" json:"assigned_at,omitempty"`
@@ -301,7 +301,7 @@ type AssignDeviceQuotaRequest struct {
 	ProductCode string `protobuf:"bytes,2,opt,name=product_code,json=productCode,proto3" json:"product_code,omitempty"`
 	// item_key is the feature item key (e.g. "device_seat").
 	ItemKey string `protobuf:"bytes,3,opt,name=item_key,json=itemKey,proto3" json:"item_key,omitempty"`
-	// cloud_id is the cloud identifier of the device to assign a seat to.
+	// cloud_id is the identifier of the device to assign a seat to.
 	CloudId       string `protobuf:"bytes,4,opt,name=cloud_id,json=cloudId,proto3" json:"cloud_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -427,7 +427,7 @@ type ReleaseDeviceQuotaRequest struct {
 	ProductCode string `protobuf:"bytes,2,opt,name=product_code,json=productCode,proto3" json:"product_code,omitempty"`
 	// item_key is the feature item key (e.g. "device_seat").
 	ItemKey string `protobuf:"bytes,3,opt,name=item_key,json=itemKey,proto3" json:"item_key,omitempty"`
-	// cloud_id is the cloud identifier of the device to release the seat from.
+	// cloud_id is the identifier of the device to release the seat from.
 	CloudId       string `protobuf:"bytes,4,opt,name=cloud_id,json=cloudId,proto3" json:"cloud_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
