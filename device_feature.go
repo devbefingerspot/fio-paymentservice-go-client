@@ -22,7 +22,7 @@ const (
 
 // DeviceAssignment represents a single device that holds an active seat.
 type DeviceAssignment struct {
-	DeviceID   string
+	CloudID    string
 	AssignedAt time.Time
 	ExpiresAt  time.Time
 }
@@ -74,7 +74,7 @@ func (c *Client) GetDeviceQuota(ctx context.Context, companyID, productCode, ite
 	assigned := make([]DeviceAssignment, 0, len(resp.AssignedDevices))
 	for _, a := range resp.AssignedDevices {
 		da := DeviceAssignment{
-			DeviceID: a.DeviceId,
+			CloudID: a.CloudId,
 		}
 		if a.AssignedAt != nil {
 			da.AssignedAt = a.AssignedAt.AsTime()
@@ -89,8 +89,9 @@ func (c *Client) GetDeviceQuota(ctx context.Context, companyID, productCode, ite
 	return info, nil
 }
 
-// AssignDeviceQuota assigns a device seat to a specific device.
-func (c *Client) AssignDeviceQuota(ctx context.Context, companyID, productCode, itemKey, deviceID string) (*DeviceQuotaResult, error) {
+// AssignDeviceQuota assigns a device seat to a specific device identified by
+// its cloud ID.
+func (c *Client) AssignDeviceQuota(ctx context.Context, companyID, productCode, itemKey, cloudID string) (*DeviceQuotaResult, error) {
 	if err := c.ensureDialed(); err != nil {
 		return nil, err
 	}
@@ -101,7 +102,7 @@ func (c *Client) AssignDeviceQuota(ctx context.Context, companyID, productCode, 
 			CompanyId:   companyID,
 			ProductCode: productCode,
 			ItemKey:     itemKey,
-			DeviceId:    deviceID,
+			CloudId:     cloudID,
 		},
 	)
 	if err != nil {
@@ -114,8 +115,9 @@ func (c *Client) AssignDeviceQuota(ctx context.Context, companyID, productCode, 
 	}, nil
 }
 
-// ReleaseDeviceQuota revokes a device seat assignment from a device.
-func (c *Client) ReleaseDeviceQuota(ctx context.Context, companyID, productCode, itemKey, deviceID string) (*DeviceQuotaResult, error) {
+// ReleaseDeviceQuota revokes a device seat assignment from a device identified
+// by its cloud ID.
+func (c *Client) ReleaseDeviceQuota(ctx context.Context, companyID, productCode, itemKey, cloudID string) (*DeviceQuotaResult, error) {
 	if err := c.ensureDialed(); err != nil {
 		return nil, err
 	}
@@ -126,7 +128,7 @@ func (c *Client) ReleaseDeviceQuota(ctx context.Context, companyID, productCode,
 			CompanyId:   companyID,
 			ProductCode: productCode,
 			ItemKey:     itemKey,
-			DeviceId:    deviceID,
+			CloudId:     cloudID,
 		},
 	)
 	if err != nil {
