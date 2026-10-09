@@ -17,6 +17,7 @@ catalog, err := client.GetCatalog(ctx, "fio-web")
 sub, err := client.GetCompanySubscription(ctx, companyID, "fio-web")
 features, err := client.GetEmployeeFeatures(ctx, companyID, "fio-web", employeeIDs)
 syncResult, err := client.SyncEmployeeFeatures(ctx, companyID, "fio-web", entries)
+deviceTypes, err := client.ListDeviceTypes(ctx)
 ```
 
 ## Services
@@ -35,6 +36,7 @@ syncResult, err := client.SyncEmployeeFeatures(ctx, companyID, "fio-web", entrie
 | `DeviceFeatureService` | `AssignDeviceQuota` | Assigns a device seat to a cloud ID |
 | `DeviceFeatureService` | `ReleaseDeviceQuota` | Revokes a device seat assignment |
 | `DeviceFeatureService` | `GetDeviceActiveFeatures` | Returns all active features assigned to a device |
+| `MasterDeviceService` | `ListDeviceTypes` | Returns list of master device types with full specifications |
 
 ## Updating Proto Files
 
