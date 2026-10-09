@@ -42,6 +42,20 @@ type DeviceQuotaResult struct {
 	Message string
 }
 
+// DeviceFeatureDetail represents a single active feature entitlement assigned to a device.
+type DeviceFeatureDetail struct {
+	FeatureKey  string
+	ItemStockID string
+	AssignedAt  time.Time
+	ExpiresAt   time.Time
+}
+
+// DeviceActiveFeaturesResult is the public result of GetDeviceActiveFeatures.
+type DeviceActiveFeaturesResult struct {
+	CloudID        string
+	ActiveFeatures []DeviceFeatureDetail
+}
+
 // GetDeviceQuota returns quota usage for a device seat feature, including the
 // list of currently assigned devices.
 func (c *Client) GetDeviceQuota(ctx context.Context, companyID, productCode, itemKey string) (*DeviceQuotaInfo, error) {
@@ -138,5 +152,44 @@ func (c *Client) ReleaseDeviceQuota(ctx context.Context, companyID, productCode,
 	return &DeviceQuotaResult{
 		Status:  DeviceQuotaStatus(resp.Status),
 		Message: resp.Message,
+	}, nil
+}
+
+// GetDeviceActiveFeatures returns all active features assigned to a device.
+// ponytail: direct mapping over proto types; if consumers require interface abstraction or custom interceptors, migrate to dedicated adapter pattern.
+func (c *Client) GetDeviceActiveFeatures(ctx context.Context, companyID, cloudID string) (*DeviceActiveFeaturesResult, error) {
+	if err := c.ensureDialed(); err != nil {
+		return nil, err
+	}
+
+	resp, err := c.deviceFeatureClient.GetDeviceActiveFeatures(
+		c.outboundContext(ctx),
+		&paymentv1.GetDeviceActiveFeaturesRequest{
+			CompanyId: companyID,
+			CloudId:   cloudID,
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	feats := make([]DeviceFeatureDetail, 0, len(resp.ActiveFeatures))
+	for _, f := range resp.ActiveFeatures {
+		detail := DeviceFeatureDetail{
+			FeatureKey:  f.FeatureKey,
+			ItemStockID: f.ItemStockId,
+		}
+		if f.AssignedAt != nil {
+			detail.AssignedAt = f.AssignedAt.AsTime()
+		}
+		if f.ExpiresAt != nil {
+			detail.ExpiresAt = f.ExpiresAt.AsTime()
+		}
+		feats = append(feats, detail)
+	}
+
+	return &DeviceActiveFeaturesResult{
+		CloudID:        resp.CloudId,
+		ActiveFeatures: feats,
 	}, nil
 }

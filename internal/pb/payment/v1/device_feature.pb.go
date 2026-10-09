@@ -232,7 +232,7 @@ func (x *GetDeviceQuotaResponse) GetAssignedDevices() []*DeviceAssignment {
 // DeviceAssignment represents a single device that holds an active seat.
 type DeviceAssignment struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// cloud_id is the cloud identifier of the assigned device.
+	// cloud_id is the identifier of the assigned device.
 	CloudId string `protobuf:"bytes,1,opt,name=cloud_id,json=cloudId,proto3" json:"cloud_id,omitempty"`
 	// assigned_at is when the seat was assigned to this device.
 	AssignedAt *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=assigned_at,json=assignedAt,proto3" json:"assigned_at,omitempty"`
@@ -301,7 +301,7 @@ type AssignDeviceQuotaRequest struct {
 	ProductCode string `protobuf:"bytes,2,opt,name=product_code,json=productCode,proto3" json:"product_code,omitempty"`
 	// item_key is the feature item key (e.g. "device_seat").
 	ItemKey string `protobuf:"bytes,3,opt,name=item_key,json=itemKey,proto3" json:"item_key,omitempty"`
-	// cloud_id is the cloud identifier of the device to assign a seat to.
+	// cloud_id is the identifier of the device to assign a seat to.
 	CloudId       string `protobuf:"bytes,4,opt,name=cloud_id,json=cloudId,proto3" json:"cloud_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -427,7 +427,7 @@ type ReleaseDeviceQuotaRequest struct {
 	ProductCode string `protobuf:"bytes,2,opt,name=product_code,json=productCode,proto3" json:"product_code,omitempty"`
 	// item_key is the feature item key (e.g. "device_seat").
 	ItemKey string `protobuf:"bytes,3,opt,name=item_key,json=itemKey,proto3" json:"item_key,omitempty"`
-	// cloud_id is the cloud identifier of the device to release the seat from.
+	// cloud_id is the identifier of the device to release the seat from.
 	CloudId       string `protobuf:"bytes,4,opt,name=cloud_id,json=cloudId,proto3" json:"cloud_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -545,6 +545,186 @@ func (x *ReleaseDeviceQuotaResponse) GetMessage() string {
 	return ""
 }
 
+type GetDeviceActiveFeaturesRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// company_id identifies the company.
+	CompanyId string `protobuf:"bytes,1,opt,name=company_id,json=companyId,proto3" json:"company_id,omitempty"`
+	// cloud_id is the identifier (cloud_id or device_id) of the device.
+	CloudId       string `protobuf:"bytes,2,opt,name=cloud_id,json=cloudId,proto3" json:"cloud_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetDeviceActiveFeaturesRequest) Reset() {
+	*x = GetDeviceActiveFeaturesRequest{}
+	mi := &file_payment_v1_device_feature_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetDeviceActiveFeaturesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetDeviceActiveFeaturesRequest) ProtoMessage() {}
+
+func (x *GetDeviceActiveFeaturesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_payment_v1_device_feature_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetDeviceActiveFeaturesRequest.ProtoReflect.Descriptor instead.
+func (*GetDeviceActiveFeaturesRequest) Descriptor() ([]byte, []int) {
+	return file_payment_v1_device_feature_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *GetDeviceActiveFeaturesRequest) GetCompanyId() string {
+	if x != nil {
+		return x.CompanyId
+	}
+	return ""
+}
+
+func (x *GetDeviceActiveFeaturesRequest) GetCloudId() string {
+	if x != nil {
+		return x.CloudId
+	}
+	return ""
+}
+
+type DeviceFeatureDetail struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// feature_key echoes the feature item key.
+	FeatureKey string `protobuf:"bytes,1,opt,name=feature_key,json=featureKey,proto3" json:"feature_key,omitempty"`
+	// item_stock_id is the assigned stock record identifier.
+	ItemStockId string `protobuf:"bytes,2,opt,name=item_stock_id,json=itemStockId,proto3" json:"item_stock_id,omitempty"`
+	// assigned_at is when the feature was assigned.
+	AssignedAt *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=assigned_at,json=assignedAt,proto3" json:"assigned_at,omitempty"`
+	// expires_at is when the feature entitlement expires.
+	ExpiresAt     *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeviceFeatureDetail) Reset() {
+	*x = DeviceFeatureDetail{}
+	mi := &file_payment_v1_device_feature_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeviceFeatureDetail) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeviceFeatureDetail) ProtoMessage() {}
+
+func (x *DeviceFeatureDetail) ProtoReflect() protoreflect.Message {
+	mi := &file_payment_v1_device_feature_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeviceFeatureDetail.ProtoReflect.Descriptor instead.
+func (*DeviceFeatureDetail) Descriptor() ([]byte, []int) {
+	return file_payment_v1_device_feature_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *DeviceFeatureDetail) GetFeatureKey() string {
+	if x != nil {
+		return x.FeatureKey
+	}
+	return ""
+}
+
+func (x *DeviceFeatureDetail) GetItemStockId() string {
+	if x != nil {
+		return x.ItemStockId
+	}
+	return ""
+}
+
+func (x *DeviceFeatureDetail) GetAssignedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.AssignedAt
+	}
+	return nil
+}
+
+func (x *DeviceFeatureDetail) GetExpiresAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.ExpiresAt
+	}
+	return nil
+}
+
+type GetDeviceActiveFeaturesResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// cloud_id is the device identifier.
+	CloudId string `protobuf:"bytes,1,opt,name=cloud_id,json=cloudId,proto3" json:"cloud_id,omitempty"`
+	// active_features lists all currently active features on this device.
+	ActiveFeatures []*DeviceFeatureDetail `protobuf:"bytes,2,rep,name=active_features,json=activeFeatures,proto3" json:"active_features,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *GetDeviceActiveFeaturesResponse) Reset() {
+	*x = GetDeviceActiveFeaturesResponse{}
+	mi := &file_payment_v1_device_feature_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetDeviceActiveFeaturesResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetDeviceActiveFeaturesResponse) ProtoMessage() {}
+
+func (x *GetDeviceActiveFeaturesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_payment_v1_device_feature_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetDeviceActiveFeaturesResponse.ProtoReflect.Descriptor instead.
+func (*GetDeviceActiveFeaturesResponse) Descriptor() ([]byte, []int) {
+	return file_payment_v1_device_feature_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *GetDeviceActiveFeaturesResponse) GetCloudId() string {
+	if x != nil {
+		return x.CloudId
+	}
+	return ""
+}
+
+func (x *GetDeviceActiveFeaturesResponse) GetActiveFeatures() []*DeviceFeatureDetail {
+	if x != nil {
+		return x.ActiveFeatures
+	}
+	return nil
+}
+
 var File_payment_v1_device_feature_proto protoreflect.FileDescriptor
 
 const file_payment_v1_device_feature_proto_rawDesc = "" +
@@ -589,7 +769,22 @@ const file_payment_v1_device_feature_proto_rawDesc = "" +
 	"\bcloud_id\x18\x04 \x01(\tR\acloudId\"m\n" +
 	"\x1aReleaseDeviceQuotaResponse\x125\n" +
 	"\x06status\x18\x01 \x01(\x0e2\x1d.payment.v1.DeviceQuotaStatusR\x06status\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage*\x93\x02\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\"Z\n" +
+	"\x1eGetDeviceActiveFeaturesRequest\x12\x1d\n" +
+	"\n" +
+	"company_id\x18\x01 \x01(\tR\tcompanyId\x12\x19\n" +
+	"\bcloud_id\x18\x02 \x01(\tR\acloudId\"\xd2\x01\n" +
+	"\x13DeviceFeatureDetail\x12\x1f\n" +
+	"\vfeature_key\x18\x01 \x01(\tR\n" +
+	"featureKey\x12\"\n" +
+	"\ritem_stock_id\x18\x02 \x01(\tR\vitemStockId\x12;\n" +
+	"\vassigned_at\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
+	"assignedAt\x129\n" +
+	"\n" +
+	"expires_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\x86\x01\n" +
+	"\x1fGetDeviceActiveFeaturesResponse\x12\x19\n" +
+	"\bcloud_id\x18\x01 \x01(\tR\acloudId\x12H\n" +
+	"\x0factive_features\x18\x02 \x03(\v2\x1f.payment.v1.DeviceFeatureDetailR\x0eactiveFeatures*\x93\x02\n" +
 	"\x11DeviceQuotaStatus\x12#\n" +
 	"\x1fDEVICE_QUOTA_STATUS_UNSPECIFIED\x10\x00\x12 \n" +
 	"\x1cDEVICE_QUOTA_STATUS_ASSIGNED\x10\x01\x12 \n" +
@@ -597,11 +792,12 @@ const file_payment_v1_device_feature_proto_rawDesc = "" +
 	"$DEVICE_QUOTA_STATUS_ALREADY_ASSIGNED\x10\x03\x12!\n" +
 	"\x1dDEVICE_QUOTA_STATUS_NOT_FOUND\x10\x04\x12)\n" +
 	"%DEVICE_QUOTA_STATUS_CAPACITY_EXCEEDED\x10\x05\x12\x1d\n" +
-	"\x19DEVICE_QUOTA_STATUS_ERROR\x10\x062\xb6\x02\n" +
+	"\x19DEVICE_QUOTA_STATUS_ERROR\x10\x062\xaa\x03\n" +
 	"\x14DeviceFeatureService\x12W\n" +
 	"\x0eGetDeviceQuota\x12!.payment.v1.GetDeviceQuotaRequest\x1a\".payment.v1.GetDeviceQuotaResponse\x12`\n" +
 	"\x11AssignDeviceQuota\x12$.payment.v1.AssignDeviceQuotaRequest\x1a%.payment.v1.AssignDeviceQuotaResponse\x12c\n" +
-	"\x12ReleaseDeviceQuota\x12%.payment.v1.ReleaseDeviceQuotaRequest\x1a&.payment.v1.ReleaseDeviceQuotaResponseB\x98\x01\n" +
+	"\x12ReleaseDeviceQuota\x12%.payment.v1.ReleaseDeviceQuotaRequest\x1a&.payment.v1.ReleaseDeviceQuotaResponse\x12r\n" +
+	"\x17GetDeviceActiveFeatures\x12*.payment.v1.GetDeviceActiveFeaturesRequest\x1a+.payment.v1.GetDeviceActiveFeaturesResponseB\x98\x01\n" +
 	"\x0ecom.payment.v1B\x12DeviceFeatureProtoP\x01Z)fio-cart-backend/gen/payment/v1;paymentv1\xa2\x02\x03PXX\xaa\x02\n" +
 	"Payment.V1\xca\x02\n" +
 	"Payment\\V1\xe2\x02\x16Payment\\V1\\GPBMetadata\xea\x02\vPayment::V1b\x06proto3"
@@ -619,35 +815,43 @@ func file_payment_v1_device_feature_proto_rawDescGZIP() []byte {
 }
 
 var file_payment_v1_device_feature_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_payment_v1_device_feature_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_payment_v1_device_feature_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_payment_v1_device_feature_proto_goTypes = []any{
-	(DeviceQuotaStatus)(0),             // 0: payment.v1.DeviceQuotaStatus
-	(*GetDeviceQuotaRequest)(nil),      // 1: payment.v1.GetDeviceQuotaRequest
-	(*GetDeviceQuotaResponse)(nil),     // 2: payment.v1.GetDeviceQuotaResponse
-	(*DeviceAssignment)(nil),           // 3: payment.v1.DeviceAssignment
-	(*AssignDeviceQuotaRequest)(nil),   // 4: payment.v1.AssignDeviceQuotaRequest
-	(*AssignDeviceQuotaResponse)(nil),  // 5: payment.v1.AssignDeviceQuotaResponse
-	(*ReleaseDeviceQuotaRequest)(nil),  // 6: payment.v1.ReleaseDeviceQuotaRequest
-	(*ReleaseDeviceQuotaResponse)(nil), // 7: payment.v1.ReleaseDeviceQuotaResponse
-	(*timestamppb.Timestamp)(nil),      // 8: google.protobuf.Timestamp
+	(DeviceQuotaStatus)(0),                  // 0: payment.v1.DeviceQuotaStatus
+	(*GetDeviceQuotaRequest)(nil),           // 1: payment.v1.GetDeviceQuotaRequest
+	(*GetDeviceQuotaResponse)(nil),          // 2: payment.v1.GetDeviceQuotaResponse
+	(*DeviceAssignment)(nil),                // 3: payment.v1.DeviceAssignment
+	(*AssignDeviceQuotaRequest)(nil),        // 4: payment.v1.AssignDeviceQuotaRequest
+	(*AssignDeviceQuotaResponse)(nil),       // 5: payment.v1.AssignDeviceQuotaResponse
+	(*ReleaseDeviceQuotaRequest)(nil),       // 6: payment.v1.ReleaseDeviceQuotaRequest
+	(*ReleaseDeviceQuotaResponse)(nil),      // 7: payment.v1.ReleaseDeviceQuotaResponse
+	(*GetDeviceActiveFeaturesRequest)(nil),  // 8: payment.v1.GetDeviceActiveFeaturesRequest
+	(*DeviceFeatureDetail)(nil),             // 9: payment.v1.DeviceFeatureDetail
+	(*GetDeviceActiveFeaturesResponse)(nil), // 10: payment.v1.GetDeviceActiveFeaturesResponse
+	(*timestamppb.Timestamp)(nil),           // 11: google.protobuf.Timestamp
 }
 var file_payment_v1_device_feature_proto_depIdxs = []int32{
-	3, // 0: payment.v1.GetDeviceQuotaResponse.assigned_devices:type_name -> payment.v1.DeviceAssignment
-	8, // 1: payment.v1.DeviceAssignment.assigned_at:type_name -> google.protobuf.Timestamp
-	8, // 2: payment.v1.DeviceAssignment.expires_at:type_name -> google.protobuf.Timestamp
-	0, // 3: payment.v1.AssignDeviceQuotaResponse.status:type_name -> payment.v1.DeviceQuotaStatus
-	0, // 4: payment.v1.ReleaseDeviceQuotaResponse.status:type_name -> payment.v1.DeviceQuotaStatus
-	1, // 5: payment.v1.DeviceFeatureService.GetDeviceQuota:input_type -> payment.v1.GetDeviceQuotaRequest
-	4, // 6: payment.v1.DeviceFeatureService.AssignDeviceQuota:input_type -> payment.v1.AssignDeviceQuotaRequest
-	6, // 7: payment.v1.DeviceFeatureService.ReleaseDeviceQuota:input_type -> payment.v1.ReleaseDeviceQuotaRequest
-	2, // 8: payment.v1.DeviceFeatureService.GetDeviceQuota:output_type -> payment.v1.GetDeviceQuotaResponse
-	5, // 9: payment.v1.DeviceFeatureService.AssignDeviceQuota:output_type -> payment.v1.AssignDeviceQuotaResponse
-	7, // 10: payment.v1.DeviceFeatureService.ReleaseDeviceQuota:output_type -> payment.v1.ReleaseDeviceQuotaResponse
-	8, // [8:11] is the sub-list for method output_type
-	5, // [5:8] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	3,  // 0: payment.v1.GetDeviceQuotaResponse.assigned_devices:type_name -> payment.v1.DeviceAssignment
+	11, // 1: payment.v1.DeviceAssignment.assigned_at:type_name -> google.protobuf.Timestamp
+	11, // 2: payment.v1.DeviceAssignment.expires_at:type_name -> google.protobuf.Timestamp
+	0,  // 3: payment.v1.AssignDeviceQuotaResponse.status:type_name -> payment.v1.DeviceQuotaStatus
+	0,  // 4: payment.v1.ReleaseDeviceQuotaResponse.status:type_name -> payment.v1.DeviceQuotaStatus
+	11, // 5: payment.v1.DeviceFeatureDetail.assigned_at:type_name -> google.protobuf.Timestamp
+	11, // 6: payment.v1.DeviceFeatureDetail.expires_at:type_name -> google.protobuf.Timestamp
+	9,  // 7: payment.v1.GetDeviceActiveFeaturesResponse.active_features:type_name -> payment.v1.DeviceFeatureDetail
+	1,  // 8: payment.v1.DeviceFeatureService.GetDeviceQuota:input_type -> payment.v1.GetDeviceQuotaRequest
+	4,  // 9: payment.v1.DeviceFeatureService.AssignDeviceQuota:input_type -> payment.v1.AssignDeviceQuotaRequest
+	6,  // 10: payment.v1.DeviceFeatureService.ReleaseDeviceQuota:input_type -> payment.v1.ReleaseDeviceQuotaRequest
+	8,  // 11: payment.v1.DeviceFeatureService.GetDeviceActiveFeatures:input_type -> payment.v1.GetDeviceActiveFeaturesRequest
+	2,  // 12: payment.v1.DeviceFeatureService.GetDeviceQuota:output_type -> payment.v1.GetDeviceQuotaResponse
+	5,  // 13: payment.v1.DeviceFeatureService.AssignDeviceQuota:output_type -> payment.v1.AssignDeviceQuotaResponse
+	7,  // 14: payment.v1.DeviceFeatureService.ReleaseDeviceQuota:output_type -> payment.v1.ReleaseDeviceQuotaResponse
+	10, // 15: payment.v1.DeviceFeatureService.GetDeviceActiveFeatures:output_type -> payment.v1.GetDeviceActiveFeaturesResponse
+	12, // [12:16] is the sub-list for method output_type
+	8,  // [8:12] is the sub-list for method input_type
+	8,  // [8:8] is the sub-list for extension type_name
+	8,  // [8:8] is the sub-list for extension extendee
+	0,  // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_payment_v1_device_feature_proto_init() }
@@ -663,7 +867,7 @@ func file_payment_v1_device_feature_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_payment_v1_device_feature_proto_rawDesc), len(file_payment_v1_device_feature_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   7,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

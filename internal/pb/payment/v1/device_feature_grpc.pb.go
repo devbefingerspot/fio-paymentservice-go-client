@@ -19,9 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	DeviceFeatureService_GetDeviceQuota_FullMethodName     = "/payment.v1.DeviceFeatureService/GetDeviceQuota"
-	DeviceFeatureService_AssignDeviceQuota_FullMethodName  = "/payment.v1.DeviceFeatureService/AssignDeviceQuota"
-	DeviceFeatureService_ReleaseDeviceQuota_FullMethodName = "/payment.v1.DeviceFeatureService/ReleaseDeviceQuota"
+	DeviceFeatureService_GetDeviceQuota_FullMethodName          = "/payment.v1.DeviceFeatureService/GetDeviceQuota"
+	DeviceFeatureService_AssignDeviceQuota_FullMethodName       = "/payment.v1.DeviceFeatureService/AssignDeviceQuota"
+	DeviceFeatureService_ReleaseDeviceQuota_FullMethodName      = "/payment.v1.DeviceFeatureService/ReleaseDeviceQuota"
+	DeviceFeatureService_GetDeviceActiveFeatures_FullMethodName = "/payment.v1.DeviceFeatureService/GetDeviceActiveFeatures"
 )
 
 // DeviceFeatureServiceClient is the client API for DeviceFeatureService service.
@@ -35,6 +36,8 @@ type DeviceFeatureServiceClient interface {
 	AssignDeviceQuota(ctx context.Context, in *AssignDeviceQuotaRequest, opts ...grpc.CallOption) (*AssignDeviceQuotaResponse, error)
 	// ReleaseDeviceQuota revokes a device seat assignment from a device.
 	ReleaseDeviceQuota(ctx context.Context, in *ReleaseDeviceQuotaRequest, opts ...grpc.CallOption) (*ReleaseDeviceQuotaResponse, error)
+	// GetDeviceActiveFeatures returns all active features assigned to a device.
+	GetDeviceActiveFeatures(ctx context.Context, in *GetDeviceActiveFeaturesRequest, opts ...grpc.CallOption) (*GetDeviceActiveFeaturesResponse, error)
 }
 
 type deviceFeatureServiceClient struct {
@@ -75,6 +78,16 @@ func (c *deviceFeatureServiceClient) ReleaseDeviceQuota(ctx context.Context, in 
 	return out, nil
 }
 
+func (c *deviceFeatureServiceClient) GetDeviceActiveFeatures(ctx context.Context, in *GetDeviceActiveFeaturesRequest, opts ...grpc.CallOption) (*GetDeviceActiveFeaturesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetDeviceActiveFeaturesResponse)
+	err := c.cc.Invoke(ctx, DeviceFeatureService_GetDeviceActiveFeatures_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DeviceFeatureServiceServer is the server API for DeviceFeatureService service.
 // All implementations must embed UnimplementedDeviceFeatureServiceServer
 // for forward compatibility.
@@ -86,6 +99,8 @@ type DeviceFeatureServiceServer interface {
 	AssignDeviceQuota(context.Context, *AssignDeviceQuotaRequest) (*AssignDeviceQuotaResponse, error)
 	// ReleaseDeviceQuota revokes a device seat assignment from a device.
 	ReleaseDeviceQuota(context.Context, *ReleaseDeviceQuotaRequest) (*ReleaseDeviceQuotaResponse, error)
+	// GetDeviceActiveFeatures returns all active features assigned to a device.
+	GetDeviceActiveFeatures(context.Context, *GetDeviceActiveFeaturesRequest) (*GetDeviceActiveFeaturesResponse, error)
 	mustEmbedUnimplementedDeviceFeatureServiceServer()
 }
 
@@ -104,6 +119,9 @@ func (UnimplementedDeviceFeatureServiceServer) AssignDeviceQuota(context.Context
 }
 func (UnimplementedDeviceFeatureServiceServer) ReleaseDeviceQuota(context.Context, *ReleaseDeviceQuotaRequest) (*ReleaseDeviceQuotaResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ReleaseDeviceQuota not implemented")
+}
+func (UnimplementedDeviceFeatureServiceServer) GetDeviceActiveFeatures(context.Context, *GetDeviceActiveFeaturesRequest) (*GetDeviceActiveFeaturesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetDeviceActiveFeatures not implemented")
 }
 func (UnimplementedDeviceFeatureServiceServer) mustEmbedUnimplementedDeviceFeatureServiceServer() {}
 func (UnimplementedDeviceFeatureServiceServer) testEmbeddedByValue()                              {}
@@ -180,6 +198,24 @@ func _DeviceFeatureService_ReleaseDeviceQuota_Handler(srv interface{}, ctx conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _DeviceFeatureService_GetDeviceActiveFeatures_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDeviceActiveFeaturesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DeviceFeatureServiceServer).GetDeviceActiveFeatures(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DeviceFeatureService_GetDeviceActiveFeatures_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DeviceFeatureServiceServer).GetDeviceActiveFeatures(ctx, req.(*GetDeviceActiveFeaturesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // DeviceFeatureService_ServiceDesc is the grpc.ServiceDesc for DeviceFeatureService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -198,6 +234,10 @@ var DeviceFeatureService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ReleaseDeviceQuota",
 			Handler:    _DeviceFeatureService_ReleaseDeviceQuota_Handler,
+		},
+		{
+			MethodName: "GetDeviceActiveFeatures",
+			Handler:    _DeviceFeatureService_GetDeviceActiveFeatures_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
