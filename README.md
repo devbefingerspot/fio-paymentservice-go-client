@@ -28,15 +28,11 @@ deviceTypes, err := client.ListDeviceTypes(ctx)
 | `CompanySubscriptionService` | `GetCompanySubscription` | Returns the active subscription for a company |
 | `EmployeeFeatureService` | `GetEmployeeFeatures` | Returns features assigned to employees |
 | `EmployeeFeatureService` | `SyncEmployeeFeatures` | Applies declarative delta to employee features |
-| `DeviceRegistryService` | `LookupDevice` | Finds a device by serial number or cloud ID |
-| `DeviceRegistryService` | `CreateDevice` | Registers a new device in payment registry |
-| `DeviceRegistryService` | `UpdateDevice` | Updates device metadata |
-| `DeviceRegistryService` | `DeleteDevice` | Removes a device from registry |
-| `DeviceFeatureService` | `GetDeviceQuota` | Returns device quota usage and seat assignments |
-| `DeviceFeatureService` | `AssignDeviceQuota` | Assigns a device seat to a cloud ID |
-| `DeviceFeatureService` | `ReleaseDeviceQuota` | Revokes a device seat assignment |
 | `DeviceFeatureService` | `GetDeviceActiveFeatures` | Returns all active features assigned to a device |
 | `MasterDeviceService` | `ListDeviceTypes` | Returns list of master device types with full specifications |
+| `OwnerFeatureService` | `GetOwnerQuota` | Returns the app-owner seat entitlement of a company |
+| `OwnerFeatureService` | `AssignOwnerQuota` | Consumes one app-owner seat for an owner user |
+| `OwnerFeatureService` | `ReleaseOwnerQuota` | Returns an app-owner seat to the pool |
 
 ## Updating Proto Files
 
