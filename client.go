@@ -35,6 +35,7 @@ type Client struct {
 	companySubscriptionClient paymentv1.CompanySubscriptionServiceClient
 	employeeFeatureClient     paymentv1.EmployeeFeatureServiceClient
 	deviceFeatureClient       paymentv1.DeviceFeatureServiceClient
+	ownerFeatureClient        paymentv1.OwnerFeatureServiceClient
 	deviceRegistryClient      paymentv1.DeviceRegistryServiceClient
 	masterDeviceClient        paymentv1.MasterDeviceServiceClient
 }
@@ -68,6 +69,7 @@ func (c *Client) WithInsecure() *Client {
 		c.companySubscriptionClient = paymentv1.NewCompanySubscriptionServiceClient(c.conn)
 		c.employeeFeatureClient = paymentv1.NewEmployeeFeatureServiceClient(c.conn)
 		c.deviceFeatureClient = paymentv1.NewDeviceFeatureServiceClient(c.conn)
+		c.ownerFeatureClient = paymentv1.NewOwnerFeatureServiceClient(c.conn)
 		c.deviceRegistryClient = paymentv1.NewDeviceRegistryServiceClient(c.conn)
 		c.masterDeviceClient = paymentv1.NewMasterDeviceServiceClient(c.conn)
 	})
@@ -97,6 +99,7 @@ func (c *Client) dialOnce() (*grpc.ClientConn, error) {
 		c.companySubscriptionClient = paymentv1.NewCompanySubscriptionServiceClient(c.conn)
 		c.employeeFeatureClient = paymentv1.NewEmployeeFeatureServiceClient(c.conn)
 		c.deviceFeatureClient = paymentv1.NewDeviceFeatureServiceClient(c.conn)
+		c.ownerFeatureClient = paymentv1.NewOwnerFeatureServiceClient(c.conn)
 		c.deviceRegistryClient = paymentv1.NewDeviceRegistryServiceClient(c.conn)
 		c.masterDeviceClient = paymentv1.NewMasterDeviceServiceClient(c.conn)
 	})
